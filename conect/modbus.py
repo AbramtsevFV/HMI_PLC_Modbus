@@ -45,4 +45,5 @@ class Modbus:
         pack = self.get_pack_package(params)
         self.send_request(pack)
         request = self.get_response()
+        params['unpack_format'] = unpack_format
         return self.unpack(unpack_format, request)
