@@ -1,3 +1,5 @@
+import os
+import sys
 from tkinter import *
 from conect.modbus import Modbus
 
@@ -33,7 +35,16 @@ class App:
         self.front.title(title)
         self.front.geometry(f'{width}x{height}+200+200')
         self.front.resizable(*resizable)
-        self.front.iconbitmap('gui/images/favico.ico')
+        if (sys.platform.startswith('win')):
+            # Favico для windows
+            self.front.iconbitmap(default='./gui/images/favico.ico')
+        else:
+            print(sys.platform.startswith('linux'))
+            # Favico для linux
+            logo = PhotoImage(file='./gui/images/favico.gif')
+            self.front.call('wm', 'iconphoto',  self.front._w, logo)
+
+
         self.entry_r0 = Entry()
         self.modbus = Modbus()
 
