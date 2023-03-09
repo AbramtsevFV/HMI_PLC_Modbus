@@ -1,5 +1,6 @@
 import sys
 from tkinter import *
+from tkinter.scrolledtext import ScrolledText
 from tkinter.ttk import Combobox
 
 from conect.modbus import Modbus
@@ -30,6 +31,12 @@ params_write = {
 }
 """"Данный класс описывает работу всего приложения"""
 
+
+def start_app():
+    app = App()
+    app.run()
+
+
 class App:
     def __init__(self, width=500, height=350, title='MB', resizable=(False, False)):
 
@@ -37,7 +44,7 @@ class App:
         self.front.title(title)
         self.front.geometry(f'{width}x{height}+200+200')
         self.front.resizable(*resizable)
-        # self.check_os()
+        self.check_os()
 
         self.combox_list = ['True', 'False']
         self.label_r0 = Label(self.front)
@@ -79,13 +86,10 @@ class App:
                 func = lambda x=entry, y=widget, z=num: self.write_teg(x, y, z)
                 self.draw_button(text='Записать', func=func)
 
-    def reconnect(self):
+    def restart(self):
         "Перезапуск программы "
         self.front.destroy()
-        m = App()
-        m.run()
-
-
+        start_app()
 
     def run(self):
         """ Метод собирает приложение"""
@@ -94,9 +98,9 @@ class App:
             self.update_and_run()
             self.draw_button(text='Считать  значение всех тегов', func=lambda x=False: self.update_and_run(x))
         else:
-            self.err_con = Label(foreground='red', text= 'Подключение к устройству ModBus не выполнено', )
+            self.err_con = Label(foreground='red', text= 'Подключение к устройству ModBus не выполнено. \n Включите устройство и нажмите "Подключить"', )
             self.err_con.pack(anchor=NW, padx=20, pady=5)
-            self.draw_button(text='Подключить', func=self.reconnect, anchor=SE, padx=10, pady=5)
+            self.draw_button(text='Подключить', func=self.restart, anchor=SE, padx=10, pady=5)
 
         self.draw_button(text='Выход', func=self.front.destroy, anchor=SE, padx=10, pady=5)
         self.front.mainloop()
